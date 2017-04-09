@@ -6,35 +6,32 @@
 #include <string.h>
 #include "utils.h"
 #define MAX_NUMBER_OF_ARGUMENTS 64
+
+extern char **environ;
 /*
  * FUNCTION: EXECUTE COMMAND
  */
 void execute(char *argv[])
 {
     // DEFINE PID AND STATUS
-    int link[2];
-    if (pipe(link)==-1) fprintf(stderr, "error occurred in pipe()\n");
+    //int link[2];
+    //if (pipe(link)==-1) fprintf(stderr, "error occurred in pipe()\n");
 
     pid_t parent = getpid();
     pid_t pid, wpid;
     char buffer[4096];
     int status;
-    char* home = (char*) calloc((strlen("HOME=") + strlen(getenv("HOME"))+1),sizeof(char));
-    strcat(home,"HOME=");
-    strcat(home, getenv("HOME"));
 
-    char* path = (char*) calloc((strlen("PATH=") + strlen(getenv("HOME"))+strlen("/inf3172/bin") + 1),sizeof(char));
-    strcat(path,"PATH=");
-    strcat(path,getenv("HOME"));
-    strcat(path, "/inf3172/bin");
-    char *envp[] = {home, path, NULL };
+
+    //strcat(path, ");
+
     //	FORK
     pid = fork();
 
     if (pid > 0) {// IF PARENT
-        close(link[1]);//don't need to write
-        int nbytes = read(link[0], buffer, sizeof(buffer));
-        fprintf(stdout, "Output: (%.*s)\n", nbytes, buffer);
+        //close(link[1]);//don't need to write
+        //int nbytes = read(link[0], buffer, sizeof(buffer));
+        //fprintf(stdout, "Output: (%.*s)\n", nbytes, buffer);
         while ((wpid = wait(&status)) > 0)
         {
             fprintf(stdout, "Exit status of %d was %d (%s)\n", (int)wpid, status,
@@ -42,14 +39,26 @@ void execute(char *argv[])
         }
 
     }else if (pid == 0) {// IF CHILD
-        close(link[0]);//don't need to read
-        dup2 (STDOUT_FILENO, link[1]); //close the stdout and replace it for the pipe to write
-        execve(*argv, argv, envp); // EXECUTE THE COMMAND WITH argv
+        //close(link[0]);//don't need to read
+        //dup2 (STDOUT_FILENO, link[1]); //close the stdout and replace it for the pipe to write
+        char filename[4096] = "";
+        char *ptr = strchr(argv,"/");
+        if(ptr == NULL) {
+            strcat(filename, getenv("HOME"));
+            strcat(filename, "/inf3172/bin/");
+            strcat(filename, argv[0]);
+        }
+        else // relative/absolute path
+            strcat(filename, *argv);
+
+        execv(filename, argv); // EXECUTE THE COMMAND WITH argv
+
+
+
+
         exit(0);
     }else // ERROR
         fprintf(stderr, "Erreur! il y a eu un probleme lors du fork de processus!!");
-    free(path);
-    free(home);
 }
 
 /*
