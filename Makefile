@@ -25,16 +25,16 @@ SRC_DIR = ./src
 SRCS= $(wildcard *.c)
 OBJS= $(SRCS:.c=.o)
 PROG= fin list new newdir rmall size tsh
-LIST= $(addprefix $(BIN_DIR)/, $(PROG))
+LIST= $(addprefix $(HOME)/$(BIN_DIR)/, $(PROG))
 
 all: dir $(LIST) tsh
 .PHONY: all dir
 
 dir:
-	mkdir -p $(BIN_DIR)
+	mkdir -p $(HOME)/$(BIN_DIR)
 
 # COMMAND
-$(BIN_DIR)/%: %.o
+$(HOME)/$(BIN_DIR)/%: %.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 %.o: %.c

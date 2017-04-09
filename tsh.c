@@ -9,21 +9,47 @@
 /*
  * FUNCTION: EXECUTE COMMAND
  */
-void execute(char **argv)
+void execute(char *argv[])
 {
     // DEFINE PID AND STATUS
-    pid_t pid;
+    int link[2];
+    if (pipe(link)==-1) fprintf(stderr, "error occurred in pipe()\n");
+
+    pid_t parent = getpid();
+    pid_t pid, wpid;
+    char buffer[4096];
     int status;
-    char *envp[] = { NULL };
+    char* home = (char*) calloc((strlen("HOME=") + strlen(getenv("HOME"))+1),sizeof(char));
+    strcat(home,"HOME=");
+    strcat(home, getenv("HOME"));
+
+    char* path = (char*) calloc((strlen("PATH=") + strlen(getenv("HOME"))+strlen("/inf3172/bin") + 1),sizeof(char));
+    strcat(path,"PATH=");
+    strcat(path,getenv("HOME"));
+    strcat(path, "/inf3172/bin");
+    char *envp[] = {home, path, NULL };
     //	FORK
     pid = fork();
 
-    if (pid > 0) // IF PARENT
-        pid = wait(&status);// WAIT THE CHILD INFINITELY
-    else if (pid == 0) // IF CHILD
-        execvp(*argv, argv); // EXECUTE THE COMMAND WITH argv
-    else // ERROR
+    if (pid > 0) {// IF PARENT
+        close(link[1]);//don't need to write
+        int nbytes = read(link[0], buffer, sizeof(buffer));
+        fprintf(stdout, "Output: (%.*s)\n", nbytes, buffer);
+        while ((wpid = wait(&status)) > 0)
+        {
+            fprintf(stdout, "Exit status of %d was %d (%s)\n", (int)wpid, status,
+                   (status > 0) ? "error!" : "successful");
+        }
+
+    }else if (pid == 0) {// IF CHILD
+        close(link[0]);//don't need to read
+        dup2 (STDOUT_FILENO, link[1]); //close the stdout and replace it for the pipe to write
+        execve(*argv, argv, envp); // EXECUTE THE COMMAND WITH argv
+        exit(0);
+    }else // ERROR
         fprintf(stderr, "Erreur! il y a eu un probleme lors du fork de processus!!");
+    free(path);
+    free(home);
 }
 
 /*
@@ -36,9 +62,8 @@ int main(void)
 
     // WHILE NOT EXIT
     while (!exit) {
-        // PRINT THE SHELL HEADER
         printf("tsh>  ");
-
+        fflush(stdin);
         // IF USER ENTERED A LINE FROM stdin
         if (fgets(line, sizeof(line), stdin) != NULL)
         {
@@ -47,7 +72,8 @@ int main(void)
             char *command_str = argv[0];
 
             //apply command
-            if (strcmp(command_str, "exit") == 0) exit = 1;
+            if(command_str == NULL) continue;
+            else if (strcmp(command_str, "exit") == 0) exit = 1;
 
             else if(strcmp(command_str, "cdir") == 0) cdir();
 
