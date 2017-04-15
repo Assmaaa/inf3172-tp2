@@ -27,7 +27,7 @@ int remove_directory(const char *fpath, const struct stat *sb, int typeflag, str
 
 int main(int argc, char* argv[]){
     if(argc != 2) fprintf(stdout, "<rmall> prend un chemin relatif/absolu en parametre\n");
-    else if (!argv[1] || access(argv[1], R_OK)) perror("ce parametre n'est pas accessbile");
-    else if (nftw(argv[1], &remove_directory, 1, FTW_DEPTH)) perror("error occurred in ftw");
+    else if (!argv[1] || access(argv[1], R_OK)) perror("ce parametre n'est pas accessbile: ");
+    else if (nftw(argv[1], &remove_directory, 1, FTW_DEPTH)) perror("error occurred while removing directory: ");
     return EXIT_SUCCESS;
 }

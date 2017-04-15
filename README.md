@@ -51,7 +51,7 @@ test
 tsh>
 ```
 
-* __rmall <nom du répertoire>__ : La commande rmall supprime un répertoire et tout son contenu récursivement (tous les sous-répertoires) sans demander de confirmation. Le nom du répertoire peut être un chemin relatif ou absolu. Si le répertoire est inexistant, un message est affiché. Si l'utilisateur ne possède pas les droits pour supprimer le répertoire, un message est affiché et le contenu doit reste intacte.
+* __rmall <nom du répertoire>__ : La commande ___rmall____ supprime un répertoire et tout son contenu récursivement (tous les sous-répertoires) sans demander de confirmation. Le nom du répertoire peut être un chemin relatif ou absolu. Si le répertoire est inexistant, un message est affiché. Si l'utilisateur ne possède pas les droits pour supprimer le répertoire, un message est affiché et le contenu doit reste intacte.
 
 ```
 tsh> rmall inf3172
@@ -63,7 +63,7 @@ Permissions insuffisantes
 tsh>
 ```
 
-* __newdir <nom du répertoire>__ : La commande newdir sert à créer un nouveau répertoire vide. Le paramètre est un chemin relatif ou absolu vers le répertoire à créer. Une erreur de création affiche un message à l'écran.
+* __newdir <nom du répertoire>__ : La commande ___newdir___ sert à créer un nouveau répertoire vide. Le paramètre est un chemin relatif ou absolu vers le répertoire à créer. Une erreur de création affiche un message à l'écran.
 ```
 tsh> newdir inf3172/tp1
 Répertoire créé
@@ -72,7 +72,7 @@ Impossible de créer le répertoire
 tsh>
 ```
 
-* __size <nom du répertoire>__ : La commande size doit calculer le nombre de fichier dans le répertoire et la taille du répertoire, c'est-à-dire la somme de la taille de tous les fichiers qu'il contient, peu importe la profondeur. Le paramètre est un chemin relatif ou absolu vers le répertoire où calculer la taille. Un message est affiché si le répertoire est inexistant.
+* __size <nom du répertoire>__ : La commande ___size___ doit calculer le nombre de fichier dans le répertoire et la taille du répertoire, c'est-à-dire la somme de la taille de tous les fichiers qu'il contient, peu importe la profondeur. Le paramètre est un chemin relatif ou absolu vers le répertoire où calculer la taille. Un message est affiché si le répertoire est inexistant.
 
 ```
 tsh> size
@@ -82,7 +82,7 @@ tsh> size temp
 Répertoire introuvable
 ```
 
-* __fin <nbLignes> <fichier>__ : La commande fin sert à afficher un certain nombre de lignes d'un fichier à partir de la fin du fichier. Le paramètre nbLignes est le nombre de lignes à afficher, ce doit être un entier positif. Le paramètre fichier est un chemin relatif ou absolu vers le fichier à lire. Une erreur est affichée si le fichier est inexistant.
+* __fin <nbLignes> <fichier>__ : La commande ___fin___ sert à afficher un certain nombre de lignes d'un fichier à partir de la fin du fichier. Le paramètre nbLignes est le nombre de lignes à afficher, ce doit être un entier positif. Le paramètre fichier est un chemin relatif ou absolu vers le fichier à lire. Une erreur est affichée si le fichier est inexistant.
 
 ```
 tsh> fin 5 inf3172/tp1/source.c
@@ -94,4 +94,11 @@ exit(0);
 tsh> fin test fichier.txt
 Argument invalide
 tsh>
+```
+
+* __tsh__ : La commande ___tsh___ ne prend aucun parametre. Lorsque lancé à l'intérieur du programme ___tsh___, cela ouvre un autre shell enfant lié au parent.
+```
+tsh> tsh
+tsh> exit
+tsh> exit
 ```
