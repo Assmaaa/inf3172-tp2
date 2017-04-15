@@ -3,6 +3,8 @@
 
 #include <errno.h>
 #include <unistd.h>
+#include <string.h>
+#include <ftw.h>
 
 void parse(char *line, char **argv)
 {
@@ -14,6 +16,18 @@ void parse(char *line, char **argv)
         token = strtok(NULL, delimiters);
     }
     *argv = (char*) '\0'; // MARK THE END OF THE ARGUMENT LIST
+}
+
+int is_directory(const char *path){
+    struct stat path_stat;
+    stat(path, &path_stat);
+    return S_ISDIR(path_stat.st_mode);
+}
+
+int is_file(const char *path){
+    struct stat path_stat;
+    stat(path, &path_stat);
+    return S_ISREG(path_stat.st_mode) || S_ISLNK(path_stat.st_mode);
 }
 
 void cdir() {

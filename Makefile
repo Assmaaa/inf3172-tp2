@@ -1,5 +1,5 @@
 ##  LEGEND  ##
-# cible: dependances
+# cible: [dependances]
 #		commandes
 #
 # $< signifie premiere dependance
@@ -20,7 +20,8 @@
 CC = gcc
 CFLAGS = -g -Wall -ansi -std=c99
 LDFLAGS =
-BIN_DIR = inf3172/bin
+PROJ_DIR = inf3172
+BIN_DIR = $(PROJ_DIR)/bin
 SRC_DIR = ./src
 SRCS= $(wildcard *.c)
 OBJS= $(SRCS:.c=.o)
@@ -45,8 +46,10 @@ tsh: tsh.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 
-.PHONY: clean cleanExec
-clean: cleanExec
+.PHONY: clean cleanObjet cleanExec
+clean: cleanObjet cleanExec
+	rm -rf $(HOME)/$(PROJ_DIR)  
+cleanObjet: cleanExec
 	rm -rf $(OBJS)
 cleanExec:
 	rm -f $(LIST) tsh

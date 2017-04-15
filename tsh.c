@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <values.h>
 #include "utils.h"
 #define MAX_NUMBER_OF_ARGUMENTS 64
 
@@ -13,49 +14,37 @@ extern char **environ;
  */
 void execute(char *argv[])
 {
-    // DEFINE PID AND STATUS
-    //int link[2];
-    //if (pipe(link)==-1) fprintf(stderr, "error occurred in pipe()\n");
-
-    pid_t parent = getpid();
     pid_t pid, wpid;
-    char buffer[4096];
     int status;
 
+    char filename[4096+1] = "";
+    char *ptr = strchr(argv[0],'/');//recherche du delimiter
 
-    //strcat(path, ");
+    if(ptr == NULL) { // default path
+        strcat(filename, getenv("HOME"));
+        strcat(filename, "/inf3172/bin/");
+        strcat(filename, argv[0]);
+    }
+    else if(ptr != argv) //relative path
+    {
+        realpath(argv[0], filename);
+    }
+    else strcat(filename, *argv); //absolute path
 
-    //	FORK
-    pid = fork();
+    pid = fork(); // creation of the child process
 
     if (pid > 0) {// IF PARENT
-        //close(link[1]);//don't need to write
-        //int nbytes = read(link[0], buffer, sizeof(buffer));
-        //fprintf(stdout, "Output: (%.*s)\n", nbytes, buffer);
-        while ((wpid = wait(&status)) > 0)
-        {
-            fprintf(stdout, "Exit status of %d was %d (%s)\n", (int)wpid, status,
-                   (status > 0) ? "error!" : "successful");
-        }
+        do {
+            wpid = waitpid(pid, &status, WUNTRACED | WCONTINUED);
+            if (wpid == -1) { perror("waitpid"); exit(EXIT_FAILURE); }
 
+            if (WIFSIGNALED(status)) printf("status: killed by signal %d\n", WTERMSIG(status));
+            else if (WIFSTOPPED(status)) printf("status: stopped by signal %d\n", WSTOPSIG(status));
+            else if (WIFCONTINUED(status)) printf("status: continued\n");
+
+        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
     }else if (pid == 0) {// IF CHILD
-        //close(link[0]);//don't need to read
-        //dup2 (STDOUT_FILENO, link[1]); //close the stdout and replace it for the pipe to write
-        char filename[4096] = "";
-        char *ptr = strchr(argv,"/");
-        if(ptr == NULL) {
-            strcat(filename, getenv("HOME"));
-            strcat(filename, "/inf3172/bin/");
-            strcat(filename, argv[0]);
-        }
-        else // relative/absolute path
-            strcat(filename, *argv);
-
-        execv(filename, argv); // EXECUTE THE COMMAND WITH argv
-
-
-
-
+        if(execv(filename, argv)) perror(strerror(errno)); // EXECUTE THE COMMAND WITH argv
         exit(0);
     }else // ERROR
         fprintf(stderr, "Erreur! il y a eu un probleme lors du fork de processus!!");
@@ -67,7 +56,7 @@ void execute(char *argv[])
 int main(void)
 {
     int  exit = 0;		/* Exit condition */
-    char line[1024];	/* line containing the arguments */
+    char line[4098] = "";	/* line containing the arguments */
 
     // WHILE NOT EXIT
     while (!exit) {

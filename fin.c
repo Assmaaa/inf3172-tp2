@@ -9,8 +9,7 @@
 int main(int argc, char* argv[]){
     char* validation_ptr;
     int num = strtol(argv[1], &validation_ptr, 10);
-    if(argc != 3)
-        fprintf(stdout, "");
+    if(argc != 3) fprintf(stdout, "<fin> prend un entier et un fichier en arguments");
     else if(num <= 0 || *validation_ptr != NULL)
         fprintf(stdout, "la commande fin prend une valeur numerique superieur" \
                 "a zero pour le nombre de ligne a lire et un chemin relatif/absolu vers le fichier\n");
