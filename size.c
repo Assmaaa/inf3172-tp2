@@ -26,7 +26,7 @@ int main(int argc, char* argv[]){
         if (!argv[1] || access(argv[1], R_OK)) perror("ce parametre n'est pas accessbile: ");
         else if (ftw(argv[1], &sum, 1)) perror("error occurred while calculating the total:");
         realpath(argv[1],path);
-        fprintf(stdout, "Le répertoire %s contient %d fichiers pour un total de %d octets.", path, qte, total);
+        fprintf(stdout, "Le répertoire %s contient %d fichiers pour un total de %d octets.\n", path, qte, total);
     }
     return EXIT_SUCCESS;
 }
