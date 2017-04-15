@@ -43,17 +43,12 @@ void cdir() {
     for (buf = ptr = NULL; ptr == NULL; size *= 2)
     {
         if ((buf = realloc(buf, size)) == NULL) {
-            puts ("Error (re)allocating memory");
+            perror("Error (re)allocating memory for path name:");
             exit (1);
         }
 
         ptr = getcwd(buf, size);
-        if (ptr == NULL && errno != ERANGE)
-        {
-            fprintf(stderr, "Value of errno: %d\n", errno);
-            perror("Error!! the string is larger than the buffer.");
-            fprintf(stderr,"Error getting the path: %s\n", strerror(errno));
-        }
+        if (ptr == NULL && errno != ERANGE) perror("error, the string is larger than the buffer: ");
     }
     fprintf(stdout,"%s\n", ptr);
     free (buf);
