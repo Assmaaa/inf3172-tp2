@@ -19,7 +19,7 @@ shell.
 * __exit__ : La commande ___exit___ ne prend aucun paramètre. Elle met fin à l'exécution du shell.
 
 ### Les autres exécutables ###
-Toutes ces commandes s'exécute dans un nouveau processus. Le ___stdout___ du nouveau processus doit être affiché par le shell.
+Toutes ces commandes s'exécute dans un nouveau processus. Le ___stdout___ du nouveau processus est affiché par le shell.
 
 * __new <nom de fichier>__ : La commande ___new___ sert à créer un nouveau fichier texte vide. Le paramètre est un chemin relatif ou absolu vers le fichier à créer. Une erreur de création doit afficher un message à l'écran.
 
