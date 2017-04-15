@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <dirent.h>
-#include <sys/stat.h>
 #include "utils.h"
 
 int main(int argc, char* argv[]){
@@ -20,11 +19,11 @@ int main(int argc, char* argv[]){
             if (argc == 1) {
                 fprintf(stdout, "Fichiers de ");
                 cdir();
-                while (ep = readdir(dp)) if (is_file(ep->d_name)) fprintf(stdout, "%s\n", ep->d_name);
+                while ( (ep = readdir(dp)) ) if (is_file(ep->d_name)) fprintf(stdout, "%s\n", ep->d_name);
             } else if (strcmp(argv[1], "-d") == 0) {
                 fprintf(stdout, "Sous-repertoire de ");
                 cdir();
-                while (ep = readdir(dp)) {
+                while ( (ep = readdir(dp)) ) {
                     if (is_directory(ep->d_name) && strcmp(ep->d_name, ".") != 0 && strcmp(ep->d_name, "..") != 0)
                             fprintf(stdout, "%s\n", ep->d_name);
                 }

@@ -1,3 +1,6 @@
+#define _XOPEN_SOURCE 1			/* Required under GLIBC for realpath */
+#define _XOPEN_SOURCE_EXTENDED 1	/* Same */
+
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -20,7 +23,7 @@ void execute(char *argv[])
         strcat(filename, "/inf3172/bin/");
         strcat(filename, argv[0]);
     }
-    else if(ptr != argv) realpath(argv[0], filename); //relative path
+    else if(ptr != argv[0]) realpath(argv[0], filename); //relative path
     else strcat(filename, *argv); //absolute path
 
     pid = fork(); // creation of the child process

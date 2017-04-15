@@ -1,3 +1,5 @@
+#define _XOPEN_SOURCE 1			/* Required under GLIBC for realpath() */
+#define _XOPEN_SOURCE_EXTENDED 1	/* Same */
 
 #include <stdlib.h>
 #include <stdio.h>
