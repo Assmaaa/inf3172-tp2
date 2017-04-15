@@ -22,13 +22,13 @@ CFLAGS = -g -Wall -ansi -std=c99
 LDFLAGS =
 PROJ_DIR = inf3172
 BIN_DIR = $(PROJ_DIR)/bin
-SRC_DIR = ./src
+SRC_DIR = $(PROJ_DIR)/src
 SRCS= $(wildcard *.c)
 OBJS= $(SRCS:.c=.o)
 PROG= fin list new newdir rmall size tsh
 LIST= $(addprefix $(HOME)/$(BIN_DIR)/, $(PROG))
 
-all: dir $(LIST) tsh
+all: dir $(LIST)
 .PHONY: all dir
 
 dir:
@@ -40,11 +40,6 @@ $(HOME)/$(BIN_DIR)/%: %.o
 
 %.o: %.c
 	$(CC) -o $@ -c $< $(CFLAGS)
-
-# MAIN
-tsh: tsh.o
-	$(CC) -o $@ $^ $(LDFLAGS)
-
 
 .PHONY: clean cleanObjet cleanExec
 clean: cleanObjet cleanExec
